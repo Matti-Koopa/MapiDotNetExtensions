@@ -22,3 +22,7 @@ RUN dotnet pack --include-symbols "MapiDotNetExtensionsLib/MapiDotNetExtensions.
 FROM pack-mapidotnetextensions AS upload-mapidotnetextensions
 ARG NEXUS_NUGET_API_KEY
 RUN dotnet nuget push /Pack/*.symbols.nupkg -s https://repo.wien.gv.at/repository/nuget.wien -k ${NEXUS_NUGET_API_KEY}
+
+# Upload MapiDotNetExtensions extern
+ARG EXTERN_NUGET_API_KEY
+RUN dotnet nuget push /Pack/*.symbols.nupkg -s https://pkgs.dev.azure.com/pma0001csa/98e153d6-ef85-4257-9fef-ebac748b651a/_packaging/Prod/nuget/v3/index.json -k ${EXTERN_NUGET_API_KEY}
