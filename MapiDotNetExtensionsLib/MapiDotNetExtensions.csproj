@@ -2,6 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Authors>Martin Macháček</Authors>
+    <Product>MapiDotNetExtensions</Product>
+    <Description>.NET extensions for MAPI properties.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/Matti-Koopa/MapiDotNetExtensions</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://martin-machacek.com/blogPost/8a7ce9a6-d88b-4954-9008-dfb83715f3b8</PackageProjectUrl>
+    <Version>1.0.0$(VersionSuffix)</Version>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageId>MapiDotNetExtensions</PackageId>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
 </Project>

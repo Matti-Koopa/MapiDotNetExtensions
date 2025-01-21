@@ -3,9 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapiDotNetExtensionsLib", "MapiDotNetExtensionsLib\MapiDotNetExtensions.csproj", "{4A5CAC9F-264B-46CF-913B-78465F8B671F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapiDotNetExtensions", "MapiDotNetExtensionsLib\MapiDotNetExtensions.csproj", "{4A5CAC9F-264B-46CF-913B-78465F8B671F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapiDotNetExtensions.Tests", "MapiDotNetExtensions.Tests\MapiDotNetExtensions.Tests.csproj", "{71AA4958-7B7E-40E1-AFC8-D8792659D503}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3427C580-E4FE-4607-8D3F-AFF37C6C96F0}"
+	ProjectSection(SolutionItems) = preProject
+		NuGetDockerfile = NuGetDockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

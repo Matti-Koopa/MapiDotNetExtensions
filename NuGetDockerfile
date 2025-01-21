@@ -1,0 +1,24 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
+WORKDIR /src
+
+# Zeitzone setzen
+ENV TZ=Europe/Vienna
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Wien CA Zertifikate holen
+RUN wget --no-proxy -q -O /usr/local/share/ca-certificates/ca-wien-bundle.crt --no-check-certificate https://repo.wien.gv.at/repository/sources/ca-wien-bundle.crt  &&\
+ update-ca-certificates
+
+# Kopieren
+COPY . .
+
+# Build MapiDotNetExtensions
+FROM base AS pack-mapidotnetextensions
+ARG BUILD_NUMBER
+RUN dotnet restore -s https://api.nuget.org/v3/index.json -s https://repo.wien.gv.at/repository/nuget.wien/ "MapiDotNetExtensionsLib/MapiDotNetExtensions.csproj"
+RUN dotnet pack --include-symbols "MapiDotNetExtensionsLib/MapiDotNetExtensions.csproj" -c Release --version-suffix ${BUILD_NUMBER} --output /Pack
+
+# Upload MapiDotNetExtensions intern
+FROM pack-mapidotnetextensions AS upload-mapidotnetextensions
+ARG NEXUS_NUGET_API_KEY
+RUN dotnet nuget push /Pack/*.symbols.nupkg -s https://repo.wien.gv.at/repository/nuget.wien -k ${NEXUS_NUGET_API_KEY}
