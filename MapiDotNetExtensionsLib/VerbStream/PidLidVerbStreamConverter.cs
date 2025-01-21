@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 namespace MapiDotNetExtensions
 {
@@ -186,15 +183,14 @@ namespace MapiDotNetExtensions
                 }
             }
 
-            var result = new VerbStream
+            return new VerbStream
             {
                 Version = version,
                 Count = count,
-                VoteOptions = voteOptions,
+                VoteOptions = voteOptions.AsReadOnly(),
                 Version2 = version2,
-                VoteOptionsExtras = voteOptionExtras
+                VoteOptionsExtras = voteOptionExtras.AsReadOnly()
             };
-            return result;
         }
 
         /// <summary>
@@ -222,50 +218,26 @@ namespace MapiDotNetExtensions
         /// </summary>
         /// <param name="voteOptions">Vote options</param>
         /// <returns>The bytes representation of <see cref="VerbStream"/>.</returns>
-        public static byte[] ToBytes(List<string> voteOptions)
+        public static byte[] ToBytes(IEnumerable<string> voteOptions)
         {
-            var verbStream = new VerbStream
-            {
-                Version = 0x0102,
-                Count = (uint)voteOptions.Count,
-                VoteOptions = new List<VoteOption>(voteOptions.Count),
-                Version2 = 0x0104,
-                VoteOptionsExtras = new List<VoteOptionExtras>(voteOptions.Count)
-            };
-            for (int i = 0; i < voteOptions.Count; i++)
-            {
-                var voteOption = voteOptions[i];
-                verbStream.VoteOptions.Add(new VoteOption
-                {
-                    VerbType = 4,
-                    DisplayNameCount = (byte)voteOption.Length,
-                    DisplayName = voteOption,
-                    MsgClsNameCount = 8,
-                    MsgClsName = "IPM.Note",
-                    Internal1StringCount = 0,
-                    DisplayNameCountRepeat = (byte)voteOption.Length,
-                    DisplayNameRepeat = voteOption,
-                    Internal2 = 0,
-                    Internal3 = 0,
-                    fUseUSHeaders = false,
-                    Internal4 = 1,
-                    SendBehavior = 1,
-                    Internal5 = 2,
-                    ID = (uint)(i + 1),
-                    Internal6 = -1,
-                });
-
-                var displayNameCount = (byte)(Encoding.Unicode.GetBytes(voteOption).Length / 2);
-                verbStream.VoteOptionsExtras.Add(new VoteOptionExtras
-                {
-                    DisplayNameCount = displayNameCount,
-                    DisplayName = voteOption,
-                    DisplayNameCountRepeat = displayNameCount,
-                    DisplayNameRepeat = voteOption
-                });
-            }
-
+            VerbStream verbStream = ToVerbStream(voteOptions);
             return ToBytes(verbStream);
+        }
+
+        /// <summary>
+        /// Converts a list of vote options to a <see cref="VerbStream"/>.
+        /// </summary>
+        /// <param name="voteOptions">Vote options</param>
+        /// <returns>The <see cref="VerbStream"/>.</returns>
+        public static VerbStream ToVerbStream(IEnumerable<string> voteOptions)
+        {
+            var voteOptionsArray = voteOptions.ToArray();
+            var voteOptionObjects = new List<VoteOption>();
+            for (var i = 0; i < voteOptionsArray.Length; i++)
+            {
+                voteOptionObjects.Add(new VoteOption(voteOptionsArray[i], i));
+            }
+            return new VerbStream(voteOptionObjects);
         }
 
         /// <summary>

@@ -5,7 +5,7 @@ namespace MapiDotNetExtensions
     /// <summary>
     /// Vote option
     /// </summary>
-    public class VoteOption
+    public record VoteOption
     {
         /// <summary>
         /// The verb used by this structure. 
@@ -16,12 +16,12 @@ namespace MapiDotNetExtensions
         /// <summary>
         /// The count of characters in the <see cref="DisplayName"/> field.
         /// </summary>
-        public byte DisplayNameCount { get; set; }
+        public byte DisplayNameCount { get; init; }
 
         /// <summary>
         /// The localized display name of the voting option (for example, "Yes") as an ANSI string, without the null terminating character.
         /// </summary>
-        public string DisplayName { get; set; }
+        public string DisplayName { get; init; }
 
         /// <summary>
         /// The count of characters in the <see cref="MsgClsName"/> field.
@@ -48,12 +48,12 @@ namespace MapiDotNetExtensions
         /// <summary>
         /// MUST have the same value as the <see cref="DisplayNameCount"/> field.
         /// </summary>
-        public byte DisplayNameCountRepeat { get; set; }
+        public byte DisplayNameCountRepeat { get; init; }
 
         /// <summary>
         /// MUST have the same value as the <see cref="DisplayName"/> field.
         /// </summary>
-        public string DisplayNameRepeat { get; set; }
+        public string DisplayNameRepeat { get; init; }
 
         /// <summary>
         /// Set to 0x00000000.
@@ -103,6 +103,35 @@ namespace MapiDotNetExtensions
         /// </summary>
         public int Internal6 { get; set; }
 
+        /// <summary>
+        /// Creates an empty <see cref="VoteOption"/> object.
+        /// </summary>
+        public VoteOption() { }
+
+        /// <summary>
+        /// Creates a default <see cref="VoteOption"/> object.
+        /// </summary>
+        /// <param name="displayName">Friendly text of this option.</param>
+        /// <param name="index">The 0-based index of this option.</param>
+        public VoteOption(string displayName, int index)
+        {
+            VerbType = 4;
+            DisplayName = DisplayNameRepeat = displayName;
+            DisplayNameCount = DisplayNameCountRepeat = (byte)DisplayName.Length;
+            MsgClsNameCount = 8;
+            MsgClsName = "IPM.Note";
+            Internal1StringCount = 0;
+            Internal2 = 0;
+            Internal3 = 0;
+            fUseUSHeaders = false;
+            Internal4 = 1;
+            SendBehavior = 1;
+            Internal5 = 2;
+            ID = (uint)(index + 1);
+            Internal6 = -1;
+        }
+
+        /// <inheritdoc />
         public override string ToString()
         {
             var sb = new StringBuilder()
